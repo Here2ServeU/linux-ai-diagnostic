@@ -110,6 +110,7 @@ No destructive actions are taken automatically. All recommendations are non-inva
 
 By Emmanuel Naweji, 2025  
 **Cloud | DevOps | SRE | FinOps | AI Engineer**  
+
 Helping businesses modernize infrastructure and guiding engineers into top 1% career paths through real-world projects and automation-first thinking.
 
 ![AWS Certified](https://img.shields.io/badge/AWS-Certified-blue?logo=amazonaws)
