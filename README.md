@@ -49,6 +49,11 @@ sudo apt install -y python3 python3-pip
 sudo yum install -y python3 python3-pip
 ```
 
+**(Recommended) Create a Virtual Environment**
+```
+python3 -m venv venv
+source venv/bin/activate
+
 **Setup**
 ```
 git clone https://github.com/Here2ServeU/linux-ai-diagnostic.git
