@@ -1,108 +1,168 @@
-# Case Study: AI-Powered Linux Diagnostic Assistant
+# AI-Powered Linux Diagnostic Assistant with Chaos Simulation and Alerts
 
-## Challenge Encountered (Context)
+## Overview
 
-Troubleshooting performance issues on Linux—such as high CPU usage, memory saturation, or disk bottlenecks—is often a complex and manual task. System administrators typically rely on command-line tools, scripts, and tribal knowledge to understand what's wrong and how to resolve it. This reactive approach increases downtime risk and demands significant expertise.
+This project provides a CLI tool that uses Python and optional GPT-4 support to:
+- Detect high CPU, memory, and disk usage
+- Suggest mitigation steps
+- Predict performance risks
+- Trigger alerts via **Slack** and **Email**
+- Simulate **chaos scenarios** (e.g., high memory or CPU usage) for testing
 
-## Goal Set (Objective)
+---
 
-The objective was to create an intelligent, developer-friendly CLI tool that:
-- Automatically detects common Linux system issues in real-time
-- Recommends actionable mitigation steps
-- Predicts performance trends using system metrics
-- Uses GPT-4 for human-readable explanations and summaries
+## Challenge (Context)
 
-## Work Done (Implementation)
+Troubleshooting performance issues on Linux can be manual and time-consuming. Engineers often lack fast, explainable diagnostics or proactive alerts. This tool bridges that gap with built-in AI and automation logic.
 
-A modular Python application was developed with both local and GPT-powered logic:
+---
 
-### Project Structure
+## Objective
+
+To provide a DevOps/SRE-friendly tool that:
+- Detects real-time issues
+- Predicts failure patterns
+- Explains root causes using GPT
+- Sends alerts via Slack and Email
+- Simulates chaos scenarios for testing monitoring setups
+
+---
+
+## Project Structure
 
 ```
 linux-ai-diagnostic/
-├── detector.py               # Detect current system issues
-├── mitigator.py              # Recommend mitigations
-├── predictor.py              # Forecast performance problems
-├── main.py                   # CLI version without GPT
-├── main_with_gpt_support.py  # GPT-4 enhanced CLI
-├── requirements.txt          # Python dependencies
+├── detector.py               # Detect issues using psutil
+├── mitigator.py              # Suggest fixes
+├── predictor.py              # Forecast risk trends
+├── notifier.py               # Email + Slack alerts
+├── chaos_simulator.py        # Generate high CPU/memory load
+├── main.py                   # Basic CLI
+├── main_with_gpt_support.py  # With GPT explanation
+├── main_with_alerts.py       # With alerting support
+├── requirements.txt
 ```
 
-### Key Components
+---
 
-- **detector.py** – Identifies CPU, memory, and disk issues using `psutil`
-- **mitigator.py** – Suggests fixes such as cleaning `/tmp` or restarting services
-- **predictor.py** – Generates dummy or real metrics to forecast risk zones
-- **main.py** – CLI without GPT
-- **main_with_gpt_support.py** – Adds OpenAI integration for explanation of issues
+## Setup Guide
 
-### Installation Instructions
+### 1. EC2 Prerequisites
 
-**Debian/Ubuntu**
-```
-sudo apt update
-sudo apt install -y python3 python3-pip
+```bash
+sudo apt update && sudo apt install -y git python3 python3-pip python3-venv
 ```
 
-**RHEL/CentOS**
-```
-sudo yum install -y python3 python3-pip
-```
+### 2. Clone and Install
 
-**(Recommended) Create a Virtual Environment**
-```
-python3 -m venv venv
-source venv/bin/activate
-```
-
-**Setup**
-```
+```bash
 git clone https://github.com/Here2ServeU/linux-ai-diagnostic.git
 cd linux-ai-diagnostic
+python3 -m venv venv
+source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-**(Optional) Set up OpenAI API**
-```
+### 3. (Optional) Add OpenAI Key
+
+```bash
 echo "OPENAI_API_KEY=your_key_here" > .env
 ```
 
-### Running the Tool
+---
 
-**Without GPT**
-```
+## Running the Tool
+
+### Without GPT
+
+```bash
 python3 main.py
 ```
 
-**With GPT-4 Support**
-```
+### With GPT Support
+
+```bash
 python3 main_with_gpt_support.py
 ```
 
-## Impact Observed (Results)
+### With GPT + Slack + Email Alerts
 
-Sample Output:
+```bash
+python3 main_with_alerts.py
 ```
-Issues Detected:
-- High CPU usage detected: 93.2%
-- High memory usage: 88%
 
-Mitigation Recommendations:
-- Top resource-intensive processes listed
-- Suggest cleanup: sudo journalctl --vacuum-time=3d
+---
+
+## Simulate Chaos (for Testing)
+
+### Trigger High Memory Usage
+
+```bash
+python3 chaos_simulator.py --memory 80
+```
+
+### Trigger High CPU Usage
+
+```bash
+python3 chaos_simulator.py --cpu 4
+```
+
+This runs dummy workloads to cross alert thresholds.
+
+---
+
+## Slack and Email Integration (Step-by-Step)
+
+### 1. Slack Setup
+
+- Go to: https://api.slack.com/apps
+- Create a new app → Incoming Webhooks → Enable
+- Add to workspace and copy the **Webhook URL**
+- Paste it into `notifier.py`
+
+```python
+webhook_url = "https://hooks.slack.com/services/XXX/YYY/ZZZ"
+```
+
+### 2. Gmail Email Setup
+
+- Use Gmail App Passwords (https://myaccount.google.com/apppasswords)
+- Enable "Less secure apps" or use App Password
+- In `notifier.py`:
+
+```python
+smtp.login("your_email@gmail.com", "your_app_password")
+```
+
+- Make sure to set your sending and receiving addresses correctly
+
+---
+
+## Sample Output
+
+```bash
+Issues Detected:
+- High CPU usage detected: 92%
+- High memory usage: 86%
+
+Suggestions:
+- Review top CPU-intensive processes
+- Clear /tmp files and compress logs
 
 GPT Summary:
-High CPU usage is likely due to background services consuming excess resources.
+High resource usage due to a Java process. Recommend inspecting logs in /var/log/java.
 
-Forecast:
-Memory usage trend is approaching a critical threshold.
+Notification sent:
+- ✅ Email alert
+- ✅ Slack alert
 ```
 
-The tool helped administrators reduce time spent identifying and reacting to issues, while also enabling predictive awareness and AI-guided summaries.
+---
 
-## Safeguards (Limitations)
+## Safe Defaults
 
-No destructive actions are taken automatically. All recommendations are non-invasive and designed to be reviewed by a human before applying.
+- This tool only **detects and notifies**
+- It does **not kill or delete anything** automatically
 
 ---
 

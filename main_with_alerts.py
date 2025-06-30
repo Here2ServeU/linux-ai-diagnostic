@@ -2,12 +2,11 @@ from detector import detect_issues
 from mitigator import mitigate
 from predictor import generate_dummy_metrics, predict_trend
 from openai import OpenAI
+from notifier import send_email, send_slack_alert
 import os
 
-# Load API key
 api_key = os.getenv("OPENAI_API_KEY")
 
-# GPT interaction
 def ask_gpt(summary):
     if not api_key:
         return "OPENAI_API_KEY not found."
@@ -24,9 +23,8 @@ def ask_gpt(summary):
     except Exception as e:
         return f"GPT error: {str(e)}"
 
-# Main execution
 def main():
-    print("Running Linux AI Diagnostic with GPT...\n")
+    print("Running Linux AI Diagnostic...\n")
     issues = detect_issues()
     if issues:
         print("Issues Detected:")
@@ -41,6 +39,11 @@ def main():
         print("\nGPT Explanation:")
         summary = "\n".join(issues + mitigations)
         print(ask_gpt(summary))
+
+        # Send alerts
+        body = "\n".join(issues)
+        send_email("Linux AI Alert", body, "your_email@example.com")
+        send_slack_alert(f"Linux AI Alert:\n{body}", "your_slack_webhook_url")
     else:
         print("No critical issues detected.")
 

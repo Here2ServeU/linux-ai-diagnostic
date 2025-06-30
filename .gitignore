@@ -1,0 +1,60 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*.so
+
+# Virtual environment
+venv/
+env/
+ENV/
+
+# Environment variable files
+.env
+.env.*
+
+# Log and output files
+*.log
+*.out
+*.tmp
+*.bak
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor folders
+.vscode/
+.idea/
+*.swp
+
+# Jupyter notebooks
+.ipynb_checkpoints/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Coverage reports
+htmlcov/
+.coverage
+.cache
+.pytest_cache/
+
+# Secrets and API keys
+secrets.*
+notifier_config.json
+
+# Optional diagnostic outputs
+*.dump
+*.prof
+*.pid
+*.trace
+
+# Installer or archive files
+*.tar.gz
+*.zip
+*.whl
+
+# Notebook conversion
+*.nbconvert.ipynb
