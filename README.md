@@ -41,6 +41,8 @@ linux-ai-diagnostic/
 ├── main_with_gpt_support.py  # With GPT explanation
 ├── main_with_alerts.py       # With alerting support
 ├── requirements.txt
+├── .env                      # Store secrets securely
+├── .gitignore                # Prevent secrets from being committed
 ```
 
 ---
@@ -68,6 +70,18 @@ pip install -r requirements.txt
 ```bash
 echo "OPENAI_API_KEY=your_key_here" > .env
 ```
+
+### 4. Add Slack and Email Secrets
+
+Add the following to your `.env` file:
+
+```
+EMAIL_ADDRESS=your_email@gmail.com
+EMAIL_PASSWORD=your_app_password
+SLACK_WEBHOOK_URL=https://hooks.slack.com/services/XXX/YYY/ZZZ
+```
+
+> ⚠️ Don't forget to secure `.env` using `.gitignore` (already included in this repo).
 
 ---
 
@@ -118,23 +132,17 @@ This runs dummy workloads to cross alert thresholds.
 - Go to: https://api.slack.com/apps
 - Create a new app → Incoming Webhooks → Enable
 - Add to workspace and copy the **Webhook URL**
-- Paste it into `notifier.py`
-
-```python
-webhook_url = "https://hooks.slack.com/services/XXX/YYY/ZZZ"
-```
+- Paste it into `.env` under `SLACK_WEBHOOK_URL`
 
 ### 2. Gmail Email Setup
 
 - Use Gmail App Passwords (https://myaccount.google.com/apppasswords)
-- Enable "Less secure apps" or use App Password
-- In `notifier.py`:
+- In `.env`, add:
 
-```python
-smtp.login("your_email@gmail.com", "your_app_password")
 ```
-
-- Make sure to set your sending and receiving addresses correctly
+EMAIL_ADDRESS=youremail@gmail.com
+EMAIL_PASSWORD=your_app_password
+```
 
 ---
 
@@ -153,8 +161,8 @@ GPT Summary:
 High resource usage due to a Java process. Recommend inspecting logs in /var/log/java.
 
 Notification sent:
-- ✅ Email alert
-- ✅ Slack alert
+- Email alert
+- Slack alert
 ```
 
 ---
@@ -200,4 +208,5 @@ Helping businesses modernize infrastructure and guiding engineers into top 1% ca
 ## Book a Free Consultation
 
 Ready to adopt GitOps or scale your Kubernetes infrastructure?  
-👉🏾 [Schedule a free 1:1 consultation](https://bit.ly/letus-meet)
+[Schedule a free 1:1 consultation](https://bit.ly/letus-meet)
+
