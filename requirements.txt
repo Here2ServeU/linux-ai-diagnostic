@@ -1,2 +1,7 @@
 psutil
 pandas
+openai
+python-dotenv
+requests
+smtplib3  # Optional: use standard smtplib (built-in) unless you need extensions
+

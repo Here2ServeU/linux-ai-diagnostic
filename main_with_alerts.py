@@ -1,11 +1,19 @@
+import os
+from dotenv import load_dotenv
 from detector import detect_issues
 from mitigator import mitigate
 from predictor import generate_dummy_metrics, predict_trend
-from openai import OpenAI
 from notifier import send_email, send_slack_alert
-import os
+from openai import OpenAI
 
+# Load environment variables from .env file
+load_dotenv()
+
+# Get secrets
 api_key = os.getenv("OPENAI_API_KEY")
+email_address = os.getenv("EMAIL_ADDRESS")
+email_password = os.getenv("EMAIL_PASSWORD")
+slack_webhook = os.getenv("SLACK_WEBHOOK_URL")
 
 def ask_gpt(summary):
     if not api_key:
@@ -26,6 +34,7 @@ def ask_gpt(summary):
 def main():
     print("Running Linux AI Diagnostic...\n")
     issues = detect_issues()
+    
     if issues:
         print("Issues Detected:")
         for issue in issues:
@@ -41,9 +50,9 @@ def main():
         print(ask_gpt(summary))
 
         # Send alerts
-        body = "\n".join(issues)
-        send_email("Linux AI Alert", body, "your_email@example.com")
-        send_slack_alert(f"Linux AI Alert:\n{body}", "your_slack_webhook_url")
+        alert_body = "\n".join(issues + mitigations)
+        send_email("Linux AI Alert", alert_body, email_address, email_address, email_password)
+        send_slack_alert(alert_body, slack_webhook)
     else:
         print("No critical issues detected.")
 
